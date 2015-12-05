@@ -1,4 +1,4 @@
-# Temperature-Web-Server
+## Temperature-Web-Server
 Take temperature readings from a MySQL database and live-stream them to a web page.
 Note that a preceding ** means that this has yet to be started or is a work in progress.
 
