@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- THE HTML PAGE AND JAVASCRIPT -->
+
+<head>
+  <style type="text/css">
+body {
+	position: absolute;
+	left: 40%;
+	top: 0px;
+}
+</style>
+
+<script language="JavaScript" type="text/javascript">
+var rg;
+
+function ajax_post(){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to the server
+    var sn = document.getElementById("scriptName").value;
+    	//var ln = document.getElementById("last_name").value;
+    var vars = "firstname="+sn;
+	var url = "/cgi-bin/"+sn+".py";
+    hr.open("Get", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+		// XML HTTP Request Properties
+		document.getElementById("response").innerHTML = hr.response;
+		document.getElementById("responseBody").innerHTML = hr.responseBody;
+		document.getElementById("responseType").innerHTML = hr.responseType;
+	    if(hr.readyState == 4 && hr.status == 200) {
+		    var return_data = hr.responseText;
+			document.getElementById("responseText").innerHTML = return_data;
+			var return_data = hr.responseXML;
+			document.getElementById("responseXML").innerHTML = return_data;
+			active = true;
+			hr.abort();
+			clearTimeout(myTOvar);
+	    }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(null); // Actually execute the request
+	if(active != true){
+		myTOvar = setTimeout('ajax_post()',1000);
+		j++;
+		document.getElementById("dTries").innerHTML = j;
+	}
+}
+
+function stop(){
+	clearTimeout(myTOvar);		
+}
+//	j++;
+//	document.getElementById("dTries").innerHTML = j;
+//	setInterval(function() {
+//        ajax_post()
+//    }, 1000);
+//	makerequest();
+//	return
+//}
+//function makerequest() {
+//	hr.open("Get", url, true);
+//	hr.send(vars);
+//    return
+//}
+</script>
+</head>
+<script>
+	var j = 0;
+	var myTOvar;
+	var active = false;
+	    function testR(){
+        var x = document.getElementsByName('scriptRadioGroup')
+		//document.getElementById("scriptName").value = "test";
+		//document.getElementById("scriptNameDiv").innerHTML = "test";
+        for(var k=0;k<x.length;k++){
+          if(x[k].checked){
+			 document.getElementById("scriptName").value = x[k].value;
+			 break;
+          }
+        }
+	}
+</script>
+<body>
+  <h2><em>Ajax Post to Python and Get Return Data</em></h2>
+  ScriptName: <input id="scriptName" name="Python Script Name" type="text" value="xmlRequest" />
+  <form id="scriptRadioGroupID" name="form1" method="post" action="">
+    <table width="200">
+      <tr>
+        <td><label><input name="scriptRadioGroup" type="radio" id="scriptRadioGroup_0" value="cgiEnvVar" onclick="testR()"/>
+            cgiEnvVar</label></td>
+      </tr>
+      <tr>
+        <td><label><input type="radio" name="scriptRadioGroup" value="xmlRequest" id="scriptRadioGroup_1" onclick="testR()" checked="checked"/>
+            xmlRequest</label></td>
+      </tr>
+    </table>
+  </form>
+  <br /> <br /> Enter new Script Name <input id="newScriptName" name="newScriptName" type="text"/>
+  		<input name="newScriptNameButton" type="submit" value="Add" onClick="append();">
+  <br /> <br /> <input name="myBtn" type="submit" value="Start Ajax" onClick="ajax_post();">
+  <br /> <br /> <input name="turnOff" type="submit" value="Stop" onClick="stop();">
+  <br /> <br />
+  <table>
+    <tr>
+      <th> XML HTTP Properties </th>
+    </tr>
+    <!--    <tr>
+      <td>response</td>
+      <td id="response">null</td>
+    </tr>-->
+    <tr>
+      <td>responseBody</td>
+      <td id="responseBody">null</td>
+    </tr>
+    <tr>
+      <td>responseType</td>
+      <td id="responseType">null</td>
+    </tr>
+  </table>
+  <br /> <br />
+  <table>
+    <tr>
+      <th> XML HTTP Returned Dtaa </th>
+    </tr>
+    <tr>
+      <td>responseText</td>
+      <td id="responseText">null</td>
+    </tr>
+    <tr>
+      <td>responseXML</td>
+      <td id="responseType">null</td>
+    </tr>
+    <tr>
+      <td># of Tries</td>
+      <td id="dTries">null</td>
+    </tr>
+  </table>
+  <div id="response">Null</div>
+</body>
+</html>
